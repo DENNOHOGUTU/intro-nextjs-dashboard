@@ -26,34 +26,28 @@ export async function createInvoice(formData: FormData) {
   const amountInCents = amount * 100;
   const date = new Date().toISOString().split('T')[0];
 
-
   try {
-  await sql`
-    INSERT INTO invoices (customer_id, amount, status, date)
-    VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
-  `;
-  } catch(errors){
+    await sql`
+      INSERT INTO invoices (customer_id, amount, status, date)
+      VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+    `;
+    revalidatePath('/dashboard/invoices');
+    redirect('/dashboard/invoices');
+  } catch (error) {
     return {
       message: 'Database error: Failed to Create Invoice',
     };
   }
-
-  revalidatePath('/dashboard/invoices');
-  redirect('/dashboard/invoices');
 }
 
 export async function deleteInvoice(id: string) {
   try {
     await sql`DELETE FROM invoices WHERE id = ${id}`;
     revalidatePath('/dashboard/invoices');
-    return { message: 'Deleted Invoice.' };
+    redirect('/dashboard/invoices');
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Invoice.' };
   }
-  
-  await sql`DELETE FROM invoices WHERE id = ${id}`;
-  revalidatePath('/dashboard/invoices');
-  redirect('/dashboard/invoices');
 }
 
 export async function updateInvoice(id: string, formData: FormData) {
@@ -67,15 +61,39 @@ export async function updateInvoice(id: string, formData: FormData) {
 
   try {
     await sql`
-        UPDATE invoices
-        SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
-        WHERE id = ${id}
-      `;
+      UPDATE invoices
+      SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
+      WHERE id = ${id}
+    `;
+    revalidatePath('/dashboard/invoices');
+    redirect('/dashboard/invoices');
   } catch (error) {
     return { message: 'Database Error: Failed to Update Invoice.' };
   }
-
-  revalidatePath('/dashboard/invoices');
-  redirect('/dashboard/invoices');
 }
 
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData | undefined, // Ensure formData can be undefined
+) {
+  if (!formData) {
+    return 'Form data is missing.';
+  }
+
+  try {
+    const formObject: { [key: string]: string } = {};
+
+    if (formData instanceof FormData) {
+      formData.forEach((value, key) => {
+        formObject[key] = value as string;
+      });
+    } else {
+      return 'Invalid form data.';
+    }
+    
+    // Add authentication logic here
+    return 'Authentication logic needs to be implemented.';
+  } catch (error) {
+    return 'Logging inn.......';
+  }
+}
