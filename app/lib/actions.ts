@@ -91,7 +91,7 @@ export async function authenticate(
       return 'Invalid form data.';
     }
     
-    // Add authentication logic here
+    // Add authentication logic
     return 'Authentication logic needs to be implemented.';
   } catch (error) {
     return 'Logging inn.......';
