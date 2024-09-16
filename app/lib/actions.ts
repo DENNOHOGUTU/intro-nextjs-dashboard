@@ -92,7 +92,7 @@ export async function authenticate(
     }
     
     // Add authentication logic
-    return 'Authentication logic needs to be implemented.';
+    return 'Logging in....';
   } catch (error) {
     return 'Logging inn.......';
   }
